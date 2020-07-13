@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IMAGE="yamaoka-kitaguchi-lab/dockersh:latest"
+IMAGE="docker.pkg.github.com/yamaoka-kitaguchi-lab/dockersh/dockersh-ubuntu:latest"
 MEMORY=64mb
 DNS1=10.0.5.55
 DNS2=10.0.5.56

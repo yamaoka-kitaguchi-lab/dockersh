@@ -15,7 +15,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
       - name: Build login environment of dockersh
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
@@ -23,7 +22,5 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           registry: docker.pkg.github.com
-          workdir: docker/pacman
-          buildargs: context
           snapshot: true
           tags: "latest"
