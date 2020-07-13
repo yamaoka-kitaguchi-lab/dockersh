@@ -1,2 +1,2 @@
 build:
-	docker build . -t yamaoka-kitaguchi-lab/dockersh:latest
+	docker build . -t docker.pkg.github.com/yamaoka-kitaguchi-lab/dockersh/dockersh-ubuntu:latest
