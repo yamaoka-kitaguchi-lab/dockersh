@@ -1,0 +1,50 @@
+#!/bin/bash
+
+IMAGE="yamaoka-kitaguchi-lab/dockersh:latest"
+MEMORY=64mb
+DNS1=10.0.5.55
+DNS2=10.0.5.56
+HOSTNAME="fumidai-life-$(openssl rand -base64 12 2> /dev/null | md5sum | cut -b 1-7)"
+
+(( $# == 0 )) && is_empty_command=true || is_empty_command=false
+(( $# > 1 )) && [[ $1 == '-c' ]] && ARGS="${@:2:($#-1)}" || ARGS="$@"
+(( ${#ARGS[@]} == 1 )) && ! $is_empty_command && is_single_command=true || is_single_command=false
+
+echox(){
+    (( $# < 2 )) && echo
+    local level="$1"
+    local message="$2"
+    case $level in
+        "W")
+            echo -e "\033[1;31m[ WARNING ] $message\033[0m" ;;
+        "C")
+            echo -e "\033[0;31m[ CAUTION ] $message\033[0m" ;;
+        "S")
+            echo -e "\033[1;34m[ SUCCESS ] $message\033[0m" ;;
+    esac
+}
+
+echox; echox
+echox W "All changes will be lost"
+echox C "You are going to log into a container - a private space which is isolated from physical environment"
+echox C "This container is automatically created and destroyed for every new session"
+
+if ! $is_empty_command; then
+    option="-i"
+    cmd="/bin/bash -c $ARGS"
+else
+    option="-it"
+    cmd=""
+    echox S "Allocate a pseudo-TTY"
+fi
+
+echox; echox
+
+docker run --rm $option -h $HOSTNAME --name $HOSTNAME \
+           --memory=${MEMORY} --dns=${DNS1} --dns=${DNS2} \
+           $IMAGE $cmd
+
+echox; echox
+echox S "Your container has been destroyed"
+echox; echox
+
